@@ -1,0 +1,16 @@
+{
+  "name": "@getsafle/nft-controller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://sshubhamagg@bitbucket.org/getsafle/nft-controller.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/getsafle/nft-controller#readme"
+}
