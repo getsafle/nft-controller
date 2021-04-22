@@ -1,6 +1,6 @@
 {
   "name": "@getsafle/nft-controller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://sshubhamagg@bitbucket.org/getsafle/nft-controller.git"
+    "url": "https://github.com/getsafle/nft-controller/"
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/getsafle/nft-controller#readme",
+  "homepage": "https://github.com/getsafle/nft-controller#readme",
   "dependencies": {
     "axios": "^0.21.1"
   }
