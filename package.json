@@ -12,5 +12,8 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/getsafle/nft-controller#readme"
+  "homepage": "https://bitbucket.org/getsafle/nft-controller#readme",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
 }
