@@ -13,8 +13,13 @@ class NftController {
         }
 
         const { assets } = response;
-        const nftDetails = JSON.parse(JSON.stringify(assets[0]));
-        return { response: nftDetails };
+        if(assets.length === 0) {
+            return { error: { status: 400, statusText: 'No details Found' } };
+        
+        } else {
+            const nftDetails = JSON.parse(JSON.stringify(assets[0]));
+            return { response: nftDetails };
+        }
     }
     
 }
