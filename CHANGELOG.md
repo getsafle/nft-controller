@@ -15,3 +15,7 @@
 ### 1.0.3 (2022-07-04)
 
 * Updated error handling
+
+### 1.0.4 (2022-09-12)
+
+* Updated the README file with the latest functional & non-functional documentation.
