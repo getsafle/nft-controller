@@ -2,6 +2,8 @@
 
 This library enables the developer to detect Non Fungible Tokens (NFT) for any public address across the supported chains.
 
+<br>
+
 ## **Installation and Usage**
 
 > Installation
@@ -30,7 +32,7 @@ Initialise the class using,
 
 <br>
 
-#### Methods
+## Methods
 
 <br>
 
