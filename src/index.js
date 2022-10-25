@@ -1,25 +1,42 @@
 
-const HELPER = require('./utils/helper');
-const { OPENSEA_API_KEY } = require('./config/index');
+const Config = require('./config');
+const Helper = require('./utils/helper');
 
 class NftController {
-    async getNftDetails(publicAddress, contractAddress) {
-        const url = await HELPER.getUserNftDataApi({ publicAddress, contractAddress });
-        const apiKey = OPENSEA_API_KEY;
-        const { response, error } = await HELPER.getRequest({ url, apiKey });
+    async detectNFTs(publicAddress, chain = 'all') {
+        Helper.inputValidator(chain);
+
+        const url = `${Config.NFT_DETECTION_API}/${publicAddress}/nfts`;
+
+        const { response, error } = await Helper.getRequest(url);
+
         if (error) {
-            const { status, statusText } = error;
-            return { error:{ status, statusText } };
+            return { error };
         }
 
-        const { assets } = response;
-        if(assets.length === 0) {
-            return { error: { status: 400, statusText: 'No details Found' } };
-        
+        const assetDetails = [];
+        let filteredData;
+
+        if (chain === 'all') {
+            filteredData = response.data;
         } else {
-            const nftDetails = JSON.parse(JSON.stringify(assets[0]));
-            return { response: nftDetails };
+            filteredData = response.data.filter((asset) => asset.chainId === Config.CHAIN_ID[chain.toLowerCase()]);
         }
+
+        filteredData.forEach((asset) => {
+            const obj = {};
+      
+            obj.name = asset.name;
+            obj.symbol = asset.symbol;
+            obj.tokenId = asset.tokenId;
+            obj.tokenUrl = asset.tokenUrl;
+            obj.contractAddress = asset.tokenAddress;
+            obj.metadata = asset.metadata;
+      
+            assetDetails.push(obj);
+        });
+
+        return { response: assetDetails };
     }
     
 }

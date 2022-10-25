@@ -1,16 +1,10 @@
 const axios = require('axios');
-const { OPENSEA_BASE_URL } = require('../config');
 
+const Config = require('../config');
 
-async function getRequest({ url, apiKey }) {
+async function getRequest(url) {
   try {
-    const response = await axios({
-        url,
-        method: 'GET',
-        headers: {
-        'X-API-KEY': apiKey,
-        },
-    });
+    const response = await axios.get(url);
 
     return { response: response.data };
   } catch (error) {
@@ -18,11 +12,14 @@ async function getRequest({ url, apiKey }) {
   }
 }
 
-async function getUserNftDataApi({ publicAddress, contractAddress }){
-    return `${OPENSEA_BASE_URL}/assets?owner=${publicAddress}&asset_contract_address=${contractAddress}`;
+function inputValidator(chain) {
+  if (!Config.CHAIN_ID[chain.toLowerCase()] && chain !== 'all') {
+    throw `${chain} chain not supported.`
+  }
 }
 
 module.exports = {
-    getRequest, getUserNftDataApi,
+    getRequest,
+    inputValidator,
 };
 
