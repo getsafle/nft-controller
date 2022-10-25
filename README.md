@@ -2,8 +2,6 @@
 
 This library enables the developer to detect Non Fungible Tokens (NFT) for any public address across the supported chains.
 
-<br>
-
 ## **Installation and Usage**
 
 > Installation
@@ -20,11 +18,9 @@ Import the package into your project using,
 const safleNftController = require('@getsafle/nft-controller');
 ```
 
-## **NFT Controller**
-
 <br>
 
-#### Initialising
+## Initialization
 
 <br>
 
