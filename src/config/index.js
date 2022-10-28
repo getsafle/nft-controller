@@ -1,4 +1,8 @@
 module.exports = {
-    OPENSEA_BASE_URL: 'https://api.opensea.io/api/v1',
-    OPENSEA_API_KEY: '',
+    NFT_DETECTION_API: 'https://nft.metafi.codefi.network/accounts',
+    CHAIN_ID: {
+        ethereum: 1,
+        polygon: 137,
+        bsc: 56,
+    }
 };

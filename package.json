@@ -1,7 +1,7 @@
 {
   "name": "@getsafle/nft-controller",
-  "version": "1.0.3",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Library to enable detection of Non Fungible Tokens (NFT) for any public address across the supported chains.",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
