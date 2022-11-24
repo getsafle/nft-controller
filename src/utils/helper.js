@@ -8,7 +8,7 @@ async function getRequest(url) {
 
     return { response: response.data };
   } catch (error) {
-    return { error: error.response };
+    return { error: error };
   }
 }
 
@@ -18,8 +18,27 @@ function inputValidator(chain) {
   }
 }
 
+async function getPriceData(contractAddress, tokenId) {
+  const { error, response } = await this.getRequest(Config.OPENSEA_API(contractAddress, tokenId));
+
+  if (error) {
+    return 'No price data found';
+  }
+
+  const { last_sale: { total_price, payment_token: { symbol, decimals, usd_price } } } = response;
+
+  const priceData = {
+    symbol,
+    valueInCrypto: total_price/decimals,
+    valueInUSD: (total_price/decimals) * usd_price,
+  }
+
+  return priceData;
+}
+
 module.exports = {
     getRequest,
     inputValidator,
+    getPriceData,
 };
 

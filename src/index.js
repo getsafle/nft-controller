@@ -23,7 +23,7 @@ class NftController {
             filteredData = response.data.filter((asset) => asset.chainId === Config.CHAIN_ID[chain.toLowerCase()]);
         }
 
-        filteredData.forEach((asset) => {
+        for (const asset of filteredData) {
             const obj = {};
       
             obj.name = asset.name;
@@ -32,9 +32,20 @@ class NftController {
             obj.tokenUrl = asset.tokenUrl;
             obj.contractAddress = asset.tokenAddress;
             obj.metadata = asset.metadata;
+            obj.chainId = asset.chainId;
+
+            let priceData;
+
+            if (obj.chainId === 1) {
+                priceData = await Helper.getPriceData(obj.contractAddress, obj.tokenId);
+            } else {
+                priceData = 'No price data found';
+            }
+
+            obj.priceData = priceData;
       
             assetDetails.push(obj);
-        });
+        };
 
         return { response: assetDetails };
     }

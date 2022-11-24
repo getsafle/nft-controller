@@ -19,3 +19,7 @@
 
 * SDK v2.0.0 - This SDK can now detect and return the details of all the NFTs for a particular address across any supported chains.
 * Supported Chains : `Ethereum`, `Polygon` and `BSC`.
+
+### 2.1.0 (2022-11-24)
+
+* This version will return the price data for every NFT. If the price data in not available, then it will return `No price data found`.

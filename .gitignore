@@ -8,3 +8,4 @@ test.js
 *.tfstate*
 .DS_Store
 .vscode
+test.js
