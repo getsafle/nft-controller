@@ -24,7 +24,6 @@ class NftController {
         }
 
         for (const asset of filteredData) {
-            // filteredData.forEach(async (asset) => {
             const obj = {};
       
             obj.name = asset.name;
