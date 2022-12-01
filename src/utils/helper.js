@@ -52,7 +52,7 @@ async function detectNFTsNFTPort(publicAddress, chain) {
 }
 
 async function detectETHNFTs(publicAddress) {
-  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum`;
+  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -67,7 +67,7 @@ async function detectETHNFTs(publicAddress) {
   let array = [ ...response.nfts ]; 
 
   while (continuation !== null) {
-    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&continuation=${continuation}`;
+    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&continuation=${continuation}`;
 
     const { response, error } = await getRequest(url, headers);
 
@@ -86,7 +86,7 @@ async function detectETHNFTs(publicAddress) {
     const obj = {};
 
     obj.name = nft.name;
-    obj.symbol = null;
+    obj.symbol = nft.contract.symbol || null;
     obj.tokenId = nft.token_id;
     obj.contractAddress = nft.contract_address;
     obj.metadata = nft.metadata;
@@ -99,7 +99,7 @@ async function detectETHNFTs(publicAddress) {
 }
 
 async function detectPolygonNFTs(publicAddress) {
-  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon`;
+  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -114,7 +114,7 @@ async function detectPolygonNFTs(publicAddress) {
   let array = [ ...response.nfts ]; 
 
   while (continuation !== null) {
-    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&continuation=${continuation}`;
+    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&continuation=${continuation}`;
 
     const { response, error } = await getRequest(url, headers);
 
@@ -133,7 +133,7 @@ async function detectPolygonNFTs(publicAddress) {
     const obj = {};
 
     obj.name = nft.name;
-    obj.symbol = null;
+    obj.symbol = nft.contract.symbol || null;
     obj.tokenId = nft.token_id;
     obj.contractAddress = nft.contract_address;
     obj.metadata = nft.metadata;

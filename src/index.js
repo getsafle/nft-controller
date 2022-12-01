@@ -74,7 +74,25 @@ class NftController {
             }
         
         } else {
-            response.transactions.forEach((data) => {
+            let transactions = [ ...response.transactions ];
+
+            let continuation = response.continuation;
+
+            while (continuation !== null && continuation != undefined) {
+                let url = `${Config.PRICE_DATA_API({ PUBLIC_ADDRESS: publicAddress, CHAIN: chain })}&continuation=${continuation}`
+
+                const { response, error } = await Helper.getRequest(url, headers);
+
+                if (error) {
+                    return 'Error detecting NFTs on Ethereum chain';
+                }
+
+                continuation = response.continuation;
+
+                transactions = [ ...transactions, ...response.transactions ];
+            }
+
+            transactions.forEach((data) => {
                 const { buyer_address, nft: { contract_address, token_id }, price_details: { asset_type, price, price_usd } } = data;
 
                 if (publicAddress.toLowerCase() === buyer_address.toLowerCase() && contractAddress.toLowerCase() === contract_address.toLowerCase() && tokenId === token_id) {
