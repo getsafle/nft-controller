@@ -45,3 +45,15 @@ const nfts = await nftController.detectNFTs(publicAddress, chain);
 * `publicAddress` - Public address to detect NFTs.
 * `chain` (optional) - Optional chain parameter to detect the NFTs. Supported chains : `Ethereum`, `Polygon` and `BSC`.
 
+<br>
+
+> Get Price Data
+
+```js
+const price = await nftController.getPriceData({ publicAddress, contractAddress, tokenId, chain });
+```
+
+* `publicAddress` - Public address of the NFT holder.
+* `chain` - Chain where the NFT was minted. Supported chains : `Ethereum`, `Polygon` and `BSC`.
+* `tokenId` - TokenId of the NFT to get the price data.
+* `contractAddress` - Contract address of the NFT collection to get the price data.

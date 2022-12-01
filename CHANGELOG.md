@@ -23,3 +23,8 @@
 ### 2.1.0 (2022-11-24)
 
 * This version will return the price data for every NFT. If the price data in not available, then it will return `No price data found`.
+
+### 2.2.0 (2022-12-01)
+
+* The `detectNFTs()` function will detect the NFTs in the address and return its details.
+* A new function `getPriceData()` is implemented to get the price data of the NFT.
