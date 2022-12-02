@@ -28,3 +28,7 @@
 
 * The `detectNFTs()` function will detect the NFTs in the address and return its details.
 * A new function `getPriceData()` is implemented to get the price data of the NFT.
+
+### 2.2.1 (2022-12-02)
+
+* [Breaking Change] Updated the function `getPriceData()` to accept the token details in an array of objects. The function will loop through the array elements to fetch the price details for all NFTs.
