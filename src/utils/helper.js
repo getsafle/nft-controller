@@ -31,19 +31,24 @@ async function detectNFTsCodefi(publicAddress) {
   return { response: response.data }
 }
 
-async function detectNFTsNFTPort(publicAddress, chain) {
+async function detectNFTsNFTPort(publicAddress, chain, ETHNFTContinuation, PolygonNFTContinuation) {
+
   const funName = {
-    ethereum: 'detectETHNFTs',
-    polygon: 'detectPolygonNFTs',
+    ethereum: { functionName: 'detectETHNFTs', continuation: ETHNFTContinuation },
+    polygon: { functionName: 'detectPolygonNFTs', continuation: PolygonNFTContinuation },
   }
 
   let result;
 
   if (chain !== 'all') {
-    [ ...result ] = await this[funName[chain]](publicAddress);
+    if (funName[chain] === undefined) {
+      throw `${chain} not supported`
+    }
+
+    [ ...result ] = await this[funName[chain].functionName](publicAddress, funName[chain].continuation);
   } else {
-    const ethNFTs = await detectETHNFTs(publicAddress);
-    const polygonNFTs = await detectPolygonNFTs(publicAddress);
+    const ethNFTs = await detectETHNFTs(publicAddress, ETHNFTContinuation);
+    const polygonNFTs = await detectPolygonNFTs(publicAddress, PolygonNFTContinuation);
 
     result = [ ...ethNFTs, ...polygonNFTs ]
   }
@@ -51,8 +56,8 @@ async function detectNFTsNFTPort(publicAddress, chain) {
   return { response: result };
 }
 
-async function detectETHNFTs(publicAddress) {
-  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information`;
+async function detectETHNFTs(publicAddress, continuation) {
+  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -62,23 +67,7 @@ async function detectETHNFTs(publicAddress) {
     return 'Error detecting NFTs on Ethereum chain';
   }
 
-  let continuation = response.continuation;
-
   let array = [ ...response.nfts ]; 
-
-  while (continuation !== null) {
-    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&continuation=${continuation}`;
-
-    const { response, error } = await getRequest(url, headers);
-
-    if (error) {
-      return 'Error detecting NFTs on Ethereum chain';
-    }
-
-    continuation = response.continuation;
-
-    array = [ ...array, ...response.nfts ];
-  }
 
   let result = [];
 
@@ -89,17 +78,18 @@ async function detectETHNFTs(publicAddress) {
     obj.symbol = nft.contract.symbol || null;
     obj.tokenId = nft.token_id;
     obj.contractAddress = nft.contract_address;
-    obj.metadata = nft.metadata;
-    obj.chainId = 1; 
+    obj.metadata = nft.contract.metadata;
+    obj.chainId = 1;
 
     result.push(obj);
   })
+  result.push({ ETHContinuation: response.continuation });
 
   return result;
 }
 
-async function detectPolygonNFTs(publicAddress) {
-  let url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information`;
+async function detectPolygonNFTs(publicAddress, continuation) {
+  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -109,23 +99,7 @@ async function detectPolygonNFTs(publicAddress) {
     return 'Error detecting NFTs on Polygon chain';
   }
 
-  let continuation = response.continuation;
-
   let array = [ ...response.nfts ]; 
-
-  while (continuation !== null) {
-    url = `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&continuation=${continuation}`;
-
-    const { response, error } = await getRequest(url, headers);
-
-    if (error) {
-      return 'Error detecting NFTs on Polygon chain';
-    }
-
-    continuation = response.continuation;
-
-    array = [ ...array, ...response.nfts ];
-  }
 
   let result = [];
 
@@ -136,11 +110,12 @@ async function detectPolygonNFTs(publicAddress) {
     obj.symbol = nft.contract.symbol || null;
     obj.tokenId = nft.token_id;
     obj.contractAddress = nft.contract_address;
-    obj.metadata = nft.metadata;
+    obj.metadata = nft.contract.metadata;
     obj.chainId = 137;
 
     result.push(obj);
   })
+  result.push({ PolygonContinuation: response.continuation });
 
   return result;
 }

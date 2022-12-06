@@ -3,21 +3,30 @@ const Config = require('./config');
 const Helper = require('./utils/helper');
 
 class NftController {
-    async detectNFTs(publicAddress, chain = 'all') {
+    async detectNFTs({ publicAddress, chain = 'all', ETHNFTContinuation, PolygonNFTContinuation }) {
         Helper.inputValidator(chain);
 
         let results;
+        let ETHContinuation = null;
+        let PolygonContinuation = null;
 
         const { response, error } = await Helper.detectNFTsCodefi(publicAddress);
 
         if (error) {
-            const { response, error } = await Helper.detectNFTsNFTPort(publicAddress, chain);
+            const { response, error } = await Helper.detectNFTsNFTPort(publicAddress, chain, ETHNFTContinuation, PolygonNFTContinuation);
 
             if (error) {
                 return { error };
             }
 
             results = response;
+
+            ETHContinuation = results.filter((asset) => { if (asset.ETHContinuation) { return asset.ETHContinuation } });
+            PolygonContinuation = results.filter((asset) => { if (asset.PolygonContinuation) { return asset.PolygonContinuation } });
+
+            ETHContinuation = (!ETHContinuation.length) ? null : ETHContinuation;
+            PolygonContinuation = (!PolygonContinuation.length) ? null : PolygonContinuation;
+
         } else {
             results = response;
         }
@@ -30,21 +39,29 @@ class NftController {
             filteredData = results.filter((asset) => asset.chainId === Config.CHAIN_ID[chain.toLowerCase()]);
         }
 
-        let assetDetails = [];
+        let assetDetails = {};
+        let array = []
 
         for (const asset of filteredData) {
-            const obj = {};
+            let obj = {};
 
-            obj.name = asset.name;
-            obj.symbol = asset.symbol;
-            obj.tokenId = asset.tokenId;
-            obj.tokenUrl = asset.tokenUrl;
-            obj.contractAddress = asset.contractAddress || asset.tokenAddress;
-            obj.metadata = asset.metadata;
-            obj.chainId = asset.chainId;
+            if (asset.chainId !== undefined) {
+                obj.name = asset.name;
+                obj.symbol = asset.symbol;
+                obj.tokenId = asset.tokenId;
+                (asset.tokenUrl) ? obj.tokenUrl = asset.tokenUrl : '';
+                obj.contractAddress = asset.contractAddress || asset.tokenAddress;
+                obj.metadata = asset.metadata;
+                obj.chainId = asset.chainId;
 
-            assetDetails.push(obj);
+                array.push(obj);
+            }
         };
+
+        assetDetails.ETHContinuation = (ETHContinuation !== null) ? ETHContinuation[0].ETHContinuation : null;
+        assetDetails.PolygonContinuation = (PolygonContinuation !== null) ? PolygonContinuation[0].PolygonContinuation : null;
+
+        assetDetails.data = array;
 
         return { response: assetDetails };
     }

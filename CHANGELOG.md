@@ -32,3 +32,8 @@
 ### 2.2.1 (2022-12-02)
 
 * [Breaking Change] Updated the function `getPriceData()` to accept the token details in an array of objects. The function will loop through the array elements to fetch the price details for all NFTs.
+
+### 2.2.2 (2022-12-06)
+
+* The response structure for `detectNFTs()` function has been changed. The NFT data will be returned inside the `data` array and pagination string will be included in the `ETHContinuation` and `PolygonContinuation`.
+* [Breaking Change] - The input parameter is accepted as objects. 2 new parameters are added - `ETHContinuation` and `PolygonContinuation`.

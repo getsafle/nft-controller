@@ -39,11 +39,13 @@ Initialise the class using,
 > Discover the NFTs and get their details
 
 ```js
-const nfts = await nftController.detectNFTs(publicAddress, chain);
+const nfts = await nftController.detectNFTs({ publicAddress, chain, ETHNFTContinuation, PolygonNFTContinuation });
 ```
 
 * `publicAddress` - Public address to detect NFTs.
 * `chain` (optional) - Optional chain parameter to detect the NFTs. Supported chains : `Ethereum`, `Polygon` and `BSC`.
+* `ETHNFTContinuation` (optional) - Optional parameter to pass the pagination string for ETH NFTs.
+* `PolygonNFTContinuation` (optional) - Optional parameter to pass the pagination string for Polygon NFTs.
 
 <br>
 
