@@ -66,63 +66,81 @@ class NftController {
         return { response: assetDetails };
     }
 
-    async getPriceData({ publicAddress, contractAddress, tokenId, chain }) {
-        const headers = (Config.DATAPOINT === 'opensea') ? { 'X-API-KEY': Config.OPENSEA_API_KEY } : { Authorization: Config.NFTPORT_API_KEY };
+    async getPriceData(params) {
+        let result = []
 
-        const { error, response } = await Helper.getRequest(Config.PRICE_DATA_API({ CONTRACT_ADDRESS: contractAddress, TOKEN_ID: tokenId, PUBLIC_ADDRESS: publicAddress, CHAIN: chain }), headers);
+        for (let param of params) {
 
-        let priceData = 'No price data found';
+            const { publicAddress, contractAddress, tokenId, chain } = param;
 
-        if (error) {
-            return priceData;
-        }
+            const headers = (Config.DATAPOINT === 'opensea') ? { 'X-API-KEY': Config.OPENSEA_API_KEY } : { Authorization: Config.NFTPORT_API_KEY };
 
-        if (Config.DATAPOINT === 'opensea') {
-            if (response.last_sale) {
-                const { last_sale: { total_price, payment_token: { symbol, decimals, usd_price } } } = response;
+            const { error, response } = await Helper.getRequest(Config.PRICE_DATA_API({ CONTRACT_ADDRESS: contractAddress, TOKEN_ID: tokenId, PUBLIC_ADDRESS: publicAddress, CHAIN: chain }), headers);
 
-                priceData = {
-                    symbol,
-                    valueInCrypto: total_price/decimals,
-                    valueInUSD: (total_price/decimals) * usd_price,
-                }
+            let priceData = 'No price data found';
+
+            if (error) {
+                result.push({ tokenId, contractAddress, priceData });
             } else {
-                priceData = 'No price data found'
-            }
-        
-        } else {
-            let transactions = [ ...response.transactions ];
+                if (Config.DATAPOINT === 'opensea') {
+                    if (response.last_sale) {
+                        const { last_sale: { total_price, payment_token: { symbol, decimals, usd_price } } } = response;
 
-            let continuation = response.continuation;
+                        priceData = {
+                            symbol,
+                            valueInCrypto: total_price/decimals,
+                            valueInUSD: (total_price/decimals) * usd_price,
+                        }
 
-            while (continuation !== null && continuation != undefined) {
-                let url = `${Config.PRICE_DATA_API({ PUBLIC_ADDRESS: publicAddress, CHAIN: chain })}&continuation=${continuation}`
+                        result.push({ tokenId, contractAddress, priceData });
+                    } else {
+                        priceData = 'No price data found'
+                        result.push({ tokenId, contractAddress, priceData });
+                    }
+                } else {
+                    let transactions = [ ...response.transactions ];
 
-                const { response, error } = await Helper.getRequest(url, headers);
+                    let continuation = response.continuation;
 
-                if (error) {
-                    return 'Error detecting NFTs on Ethereum chain';
-                }
+                    while (continuation !== null && continuation != undefined) {
+                        let url = `${Config.PRICE_DATA_API({ PUBLIC_ADDRESS: publicAddress, CHAIN: chain })}&continuation=${continuation}`
 
-                continuation = response.continuation;
+                        const { response, error } = await Helper.getRequest(url, headers);
 
-                transactions = [ ...transactions, ...response.transactions ];
-            }
+                        if (error) {
+                            result.push({ tokenId, contractAddress, priceData: 'No price data found' });
+                        }
 
-            transactions.forEach((data) => {
-                const { buyer_address, nft: { contract_address, token_id }, price_details: { asset_type, price, price_usd } } = data;
+                        continuation = response.continuation;
 
-                if (publicAddress.toLowerCase() === buyer_address.toLowerCase() && contractAddress.toLowerCase() === contract_address.toLowerCase() && tokenId === token_id) {
-                    priceData = {
-                        symbol: asset_type,
-                        valueInCrypto: price,
-                        valueInUSD: price_usd,
+                        transactions = [ ...transactions, ...response.transactions ];
+                    }
+
+                    let isPresent = false;
+
+                    transactions.forEach((data) => {
+                        const { buyer_address, nft: { contract_address, token_id }, price_details: { asset_type, price, price_usd } } = data;
+
+                        if (publicAddress.toLowerCase() === buyer_address.toLowerCase() && contractAddress.toLowerCase() === contract_address.toLowerCase() && tokenId === token_id) {
+                            priceData = {
+                                symbol: asset_type,
+                                valueInCrypto: price,
+                                valueInUSD: price_usd,
+                            }
+
+                            isPresent = true;
+
+                            result.push({ tokenId, contractAddress, priceData });
+                        }
+                    })
+
+                    if (!isPresent) {
+                        result.push({ tokenId, contractAddress, priceData });
                     }
                 }
-            })
+            }
         }
-
-        return { response: priceData };
+        return { response: result };
     }
     
 }

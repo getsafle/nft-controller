@@ -52,7 +52,7 @@ const nfts = await nftController.detectNFTs({ publicAddress, chain, ETHNFTContin
 > Get Price Data
 
 ```js
-const price = await nftController.getPriceData({ publicAddress, contractAddress, tokenId, chain });
+const price = await nftController.getPriceData([{ publicAddress, contractAddress, tokenId, chain }]);
 ```
 
 * `publicAddress` - Public address of the NFT holder.
