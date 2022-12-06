@@ -28,3 +28,8 @@
 
 * The `detectNFTs()` function will detect the NFTs in the address and return its details.
 * A new function `getPriceData()` is implemented to get the price data of the NFT.
+
+### 2.2.1 (2022-12-06)
+
+* The response structure for `detectNFTs()` function has been changed. The NFT data will be returned inside the `data` array and pagination string will be included in the `ETHContinuation` and `PolygonContinuation`.
+* [Breaking Change] - The input parameter is accepted as objects. 2 new parameters are added - `ETHContinuation` and `PolygonContinuation`.
