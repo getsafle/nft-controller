@@ -57,7 +57,7 @@ async function detectNFTsNFTPort(publicAddress, chain, ETHNFTContinuation, Polyg
 }
 
 async function detectETHNFTs(publicAddress, continuation) {
-  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information`;
+  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=ethereum&include=contract_information&include=metadata`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -80,6 +80,9 @@ async function detectETHNFTs(publicAddress, continuation) {
     obj.contractAddress = nft.contract_address;
     obj.metadata = nft.contract.metadata;
     obj.chainId = 1;
+    obj.contract = nft.contract;
+    obj.tokenUrl = nft.tokenUrl ? nft.tokenUrl : nft.file_url;
+    
 
     result.push(obj);
   })
@@ -89,7 +92,7 @@ async function detectETHNFTs(publicAddress, continuation) {
 }
 
 async function detectPolygonNFTs(publicAddress, continuation) {
-  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information`;
+  let url = (continuation) ? `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&continuation=${continuation}` : `${Config.NFTPORT_NFT_DETECTION_API}/${publicAddress}/?chain=polygon&include=contract_information&include=metadata`;
 
   const headers = { Authorization: Config.NFTPORT_API_KEY };
 
@@ -112,6 +115,8 @@ async function detectPolygonNFTs(publicAddress, continuation) {
     obj.contractAddress = nft.contract_address;
     obj.metadata = nft.contract.metadata;
     obj.chainId = 137;
+    obj.contract = nft.contract;
+    obj.tokenUrl = nft.tokenUrl ? nft.tokenUrl : nft.file_url;
 
     result.push(obj);
   })

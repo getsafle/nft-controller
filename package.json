@@ -1,6 +1,6 @@
 {
   "name": "@getsafle/nft-controller",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Library to enable detection of Non Fungible Tokens (NFT) for any public address across the supported chains.",
   "main": "src/index.js",
   "scripts": {

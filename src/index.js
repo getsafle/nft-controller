@@ -46,13 +46,14 @@ class NftController {
             let obj = {};
 
             if (asset.chainId !== undefined) {
-                obj.name = asset.name;
-                obj.symbol = asset.symbol;
-                obj.tokenId = asset.tokenId;
+                obj.name = asset.name ? asset.name : asset.contract?.name;
+                obj.symbol = asset.symbol ? asset.symbol : asset.contract?.symbol;
+                obj.tokenId = asset.tokenId ? asset.tokenId : asset.contract?.tokenId;
                 (asset.tokenUrl) ? obj.tokenUrl = asset.tokenUrl : '';
-                obj.contractAddress = asset.contractAddress || asset.tokenAddress;
-                obj.metadata = asset.metadata;
-                obj.chainId = asset.chainId;
+                obj.contractAddress = asset.contractAddress || asset.tokenAddress || asset.contract_address || asset.token_address ?
+                    asset.contractAddress || asset.tokenAddress || asset.contract_address || asset.token_address : asset.contract?.contractAddress || asset.contract?.tokenAddress || asset.contract?.contract_address || asset.contract?.token_address
+                obj.metadata = asset.metadata ? asset.metadata : asset.contract?.metadata;
+                obj.chainId = asset.chainId ? asset.chainId : asset.contract?.chainId;
 
                 array.push(obj);
             }
