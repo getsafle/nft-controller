@@ -54,8 +54,13 @@ class NftController {
                     asset.contractAddress || asset.tokenAddress || asset.contract_address || asset.token_address : asset.contract?.contractAddress || asset.contract?.tokenAddress || asset.contract?.contract_address || asset.contract?.token_address
                 obj.metadata = asset.metadata ? asset.metadata : asset.contract?.metadata;
                 obj.chainId = asset.chainId ? asset.chainId : asset.contract?.chainId;
-
-                array.push(obj);
+                if(asset.isErc721!=null || asset.isErc721!= undefined){
+                    obj.isErc721 = asset.isErc721;
+                }
+                else{
+                    obj.isErc721 = asset.contract?.isErc721;
+                }
+                array.push(obj)
             }
         };
 
