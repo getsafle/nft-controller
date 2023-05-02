@@ -42,3 +42,7 @@
 ### 2.2.3 (2023-01-30)
 
 * The response structure for `detectNFTs()` function has been updated for nftport API response. 
+
+### 2.2.4 (2023-05-02)
+
+* Returned flag `isERC721` in the response

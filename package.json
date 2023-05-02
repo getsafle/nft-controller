@@ -1,6 +1,6 @@
 {
   "name": "@getsafle/nft-controller",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Library to enable detection of Non Fungible Tokens (NFT) for any public address across the supported chains.",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "https://github.com/getsafle/nft-controller/"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/getsafle/nft-controller#readme",
   "dependencies": {
     "axios": "^0.21.1"
