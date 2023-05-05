@@ -43,6 +43,6 @@
 
 * The response structure for `detectNFTs()` function has been updated for nftport API response. 
 
-### 2.2.4 (2023-05-02)
+### 2.3.0 (2023-05-05)
 
-* Returned flag `isERC721` in the response
+* Updated `detectNFTs()` method to implement infura SDK for NFT detection.
