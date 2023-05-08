@@ -14,6 +14,7 @@
   "license": "MIT",
   "homepage": "https://github.com/getsafle/nft-controller#readme",
   "dependencies": {
+    "@infura/sdk": "^2.3.10",
     "axios": "^0.21.1"
   }
 }
