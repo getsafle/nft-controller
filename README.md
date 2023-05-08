@@ -43,9 +43,7 @@ const nfts = await nftController.detectNFTs({ publicAddress, chain, ETHNFTContin
 ```
 
 * `publicAddress` - Public address to detect NFTs.
-* `chain` (optional) - Optional chain parameter to detect the NFTs. Supported chains : `Ethereum`, `Polygon` and `BSC`.
-* `ETHNFTContinuation` (optional) - Optional parameter to pass the pagination string for ETH NFTs.
-* `PolygonNFTContinuation` (optional) - Optional parameter to pass the pagination string for Polygon NFTs.
+* `chain` (optional) - Optional chain parameter to detect the NFTs. Supported chains : `Ethereum`, `Polygon`.
 
 <br>
 
@@ -56,6 +54,6 @@ const price = await nftController.getPriceData([{ publicAddress, contractAddress
 ```
 
 * `publicAddress` - Public address of the NFT holder.
-* `chain` - Chain where the NFT was minted. Supported chains : `Ethereum`, `Polygon` and `BSC`.
+* `chain` - Chain where the NFT was minted. Supported chains : `Ethereum`, `Polygon`.
 * `tokenId` - TokenId of the NFT to get the price data.
 * `contractAddress` - Contract address of the NFT collection to get the price data.

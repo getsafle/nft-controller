@@ -1,71 +1,52 @@
 
 const Config = require('./config');
 const Helper = require('./utils/helper');
+const { SDK, Auth, TEMPLATES, Metadata } = require('@infura/sdk') ;
 
 class NftController {
-    async detectNFTs({ publicAddress, chain = 'all', ETHNFTContinuation, PolygonNFTContinuation }) {
+    async detectNFTs({ publicAddress, chain  }) {
         Helper.inputValidator(chain);
 
-        let results;
-        let ETHContinuation = null;
-        let PolygonContinuation = null;
+        const chainId = Config.CHAIN_ID[chain];
+    
+        const auth = new Auth({
+            projectId: Config.INFURA_PROJECT_ID,
+            secretId: Config.INFURA_SECRET_ID,
+            privateKey: Config.PRIVATEKEY,
+            chainId,
+      });
 
-        const { response, error } = await Helper.detectNFTsCodefi(publicAddress);
+      const sdk = new SDK(auth);
+      const result = await sdk.api.getNFTs({
+        publicAddress,
+        includeMetadata: true,
+      });
 
-        if (error) {
-            const { response, error } = await Helper.detectNFTsNFTPort(publicAddress, chain, ETHNFTContinuation, PolygonNFTContinuation);
+      
+const {assets} = result;
+      let array = [];
+      let assetDetails = {};         
 
-            if (error) {
-                return { error };
+
+      for (const asset of assets) {
+        let obj = {};
+
+        
+            obj.name = asset.metadata?.name;
+            obj.symbol = asset.metadata?.symbol;
+            obj.tokenId = asset.tokenId;
+            obj.tokenUrl= asset.metadata?.external_url;
+            obj.contractAddress = asset.contract;
+            obj.metadata = asset.metadata;
+            obj.chainId = chainId;
+            if(asset.type==='ERC721'){
+                obj.isErc721 = true;
             }
-
-            results = response;
-
-            ETHContinuation = results.filter((asset) => { if (asset.ETHContinuation) { return asset.ETHContinuation } });
-            PolygonContinuation = results.filter((asset) => { if (asset.PolygonContinuation) { return asset.PolygonContinuation } });
-
-            ETHContinuation = (!ETHContinuation.length) ? null : ETHContinuation;
-            PolygonContinuation = (!PolygonContinuation.length) ? null : PolygonContinuation;
-
-        } else {
-            results = response;
-        }
-
-        let filteredData;
-
-        if (chain === 'all') {
-            filteredData = results;
-        } else {
-            filteredData = results.filter((asset) => asset.chainId === Config.CHAIN_ID[chain.toLowerCase()]);
-        }
-
-        let assetDetails = {};
-        let array = []
-
-        for (const asset of filteredData) {
-            let obj = {};
-
-            if (asset.chainId !== undefined) {
-                obj.name = asset.name ? asset.name : asset.contract?.name;
-                obj.symbol = asset.symbol ? asset.symbol : asset.contract?.symbol;
-                obj.tokenId = asset.tokenId ? asset.tokenId : asset.contract?.tokenId;
-                (asset.tokenUrl) ? obj.tokenUrl = asset.tokenUrl : '';
-                obj.contractAddress = asset.contractAddress || asset.tokenAddress || asset.contract_address || asset.token_address ?
-                    asset.contractAddress || asset.tokenAddress || asset.contract_address || asset.token_address : asset.contract?.contractAddress || asset.contract?.tokenAddress || asset.contract?.contract_address || asset.contract?.token_address
-                obj.metadata = asset.metadata ? asset.metadata : asset.contract?.metadata;
-                obj.chainId = asset.chainId ? asset.chainId : asset.contract?.chainId;
-                if(asset.isErc721!=null || asset.isErc721!= undefined){
-                    obj.isErc721 = asset.isErc721;
-                }
-                else{
-                    obj.isErc721 = asset.contract?.isErc721;
-                }
-                array.push(obj)
+            else{
+                obj.isErc721 = false;
             }
-        };
-
-        assetDetails.ETHContinuation = (ETHContinuation !== null) ? ETHContinuation[0].ETHContinuation : null;
-        assetDetails.PolygonContinuation = (PolygonContinuation !== null) ? PolygonContinuation[0].PolygonContinuation : null;
+            array.push(obj)
+    };
 
         assetDetails.data = array;
 
