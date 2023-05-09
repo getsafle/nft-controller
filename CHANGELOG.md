@@ -46,3 +46,7 @@
 ### 2.3.0 (2023-05-05)
 
 * Updated `detectNFTs()` method to implement infura SDK for NFT detection.
+
+### 2.3.1 (2023-05-09)
+
+* Updated `detectNFTs()` method to implement infura API's for NFT detection.
